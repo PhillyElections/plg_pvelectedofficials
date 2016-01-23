@@ -12,6 +12,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.plugin.plugin');
+jimport('kint.kint');
 
 /**
  * Example Content Plugin
@@ -154,6 +155,7 @@ class plgContentElectedofficials extends JPlugin
      */
     public function prepOfficialsDisplay(&$text)
     {
+
         // Quick, cheap chance to back out.
         if (JString::strpos($text, 'Electedofficials') === false) {
             return true;
@@ -188,6 +190,7 @@ class plgContentElectedofficials extends JPlugin
     public function getElectedofficialsStrings(&$text)
     {
         // Quick, cheap chance to back out.
+
         if (JString::strpos($text, 'Electedofficials') === false) {
             return true;
         }
@@ -196,17 +199,18 @@ class plgContentElectedofficials extends JPlugin
 
         while (preg_match($search, $text, $regs, PREG_OFFSET_CAPTURE)) {
 
-            $temp = explode('=', trim(trim($regs[0][0], '[]'), '[]'));
-            if (sizeof($temp) === 2) {
-                $temp2 = explode(':', $temp[0]);
-                $field = $temp2[1];
-                $value = $temp[1];
-            }
+/*            $temp = explode('=', trim(trim($regs[0][0], '[]'), '[]'));
+if (sizeof($temp) === 2) {
+$temp2 = explode(':', $temp[0]);
+$field = $temp2[1];
+$value = $temp[1];
+}*/
 
-            if ($field && $value && $content = $this->getOfficials($field, $value)) {
+            if ($content = $this->getOfficials()) {
                 $text = JString::str_ireplace($regs[0][0], $content, $text);
             }
         }
+        dd("Back in getElectedofficialsStrings");
         return true;
     }
 
@@ -218,20 +222,28 @@ class plgContentElectedofficials extends JPlugin
      * @param   string   $value  db value
      * @return  method
      */
-    public function getOfficials($field, $value)
+    public function getOfficials()
     {
         $db = &JFactory::getDBO();
 
-        $query1 = 'SELECT distinct `level` from `#__electedofficials`';
+        $query = 'SELECT distinct `office_level` from `#__electedofficials`';
 
-        $db->setQuery($query1);
+        $db->setQuery($query);
         $levels = $db->loadObjectList();
-        foreach ($levels as $level) {
-            d($level);
-            $query2 = 'SELECT distinct `office` from `#__electedofficials` where `level`="$level"';
 
+        foreach ($levels as $level) {
+            $results[$level->office_level] = array();
+            $query = 'SELECT distinct `office` from `#__electedofficials` where `office_level`="' . $level->office_level . '"';
+            $db->setQuery($query);
+            $offices = $db->loadObjectList();
+            foreach ($offices as $office) {
+                $query = 'SELECT * from `#__electedofficials` where `office_level`="' . $level->office_level . '" and `office`="' . $office->office . '" ';
+
+                $db->setQuery($query);
+                array_push($results[$level->office_level], array($office->office => $db->loadAssocList()));
+            }
         }
-        dd($results);
+        d($results, $db);
         return $this->getContent($results);
     }
 

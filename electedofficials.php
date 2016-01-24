@@ -227,10 +227,27 @@ $value = $temp[1];
         $db = &JFactory::getDBO();
 
         $query = 'SELECT distinct `office_level` from `#__electedofficials`';
-
+/*
+local, not commissioners and not council
+City Officials
+local, commissioners
+City Commissioners
+local, council
+City Council Members
+state, not reprepresentative, not senate
+State Officials
+state, representative
+State Representatives
+state, senators
+State Senators
+federal, senators
+United States Senators
+federal, representatives
+United States Representatives
+ */
         $db->setQuery($query);
         $levels = $db->loadObjectList();
-
+        //foreach (array('local_executive', ))
         foreach ($levels as $level) {
             $results[$level->office_level] = array();
             $query = 'SELECT distinct `office` from `#__electedofficials` where `office_level`="' . $level->office_level . '"';
@@ -243,7 +260,7 @@ $value = $temp[1];
                 array_push($results[$level->office_level], array($office->office => $db->loadAssocList()));
             }
         }
-        d($results, $db);
+        dd($results);
         return $this->getContent($results);
     }
 
@@ -251,13 +268,26 @@ $value = $temp[1];
      * Get officials data,
      * return officials display.
      *
-     * @param   objectList   $results  officials data
+     * @param   array   $results  officials data
      * @return  string
      */
     public function getContent(&$results)
     {
-        $return = "";
-        foreach ($results as $result) {
+        $return = "<h3>City Officials</h3>";
+
+        $executive = array();
+        foreach ($results['local'] as $result) {
+            if (count($result) === 1) {
+                //        $executive
+            }
+        }
+        $return .= "<h3>PA Officials</h3>";
+
+        foreach ($results['state'] as $result) {
+        }
+        $return .= "<h3>US Officials</h3>";
+        foreach ($results['federal'] as $result) {
+
             $sid = $result->sid;
             if (JString::strpos($result->sid, '%') !== false && JString::strpos($result->sid, '^') !== false) {
                 $temp = explode('%', $result->sid);

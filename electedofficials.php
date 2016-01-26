@@ -305,6 +305,7 @@ $value = $temp[1];
                 }
                 break;
         }
+        array_push($results[$segment], $array);
     }
 
     /**

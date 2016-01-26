@@ -3,7 +3,7 @@ div.h-card {
   line-height: 1.2em;
   display: inline-block;
   border-radius: .2em;
-  border: .05em solid #59564F !important;
+  border: .1em solid #59564F !important;
   box-shadow: .05em .05em .05em .05em #ccc;
   float: left;
   font-size: .95em;

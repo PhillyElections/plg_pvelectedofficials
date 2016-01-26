@@ -1,0 +1,69 @@
+
+div.h-card {
+  line-height: 1.2em;
+  display: inline-block;
+  border-radius: .1em;
+  border: .05em solid #59564F !important;
+  box-shadow: .05em .05em .05em .05em #ccc;
+  float: left;
+  font-size: .95em;
+  margin: .5em;
+  height: 10em;
+  padding: .8em .4em .8em .8em;
+  width: 28%;
+}
+div.p-locality,
+div.p-region {
+  float: left;
+}
+div.p-locality:after {
+  content: ',\00a0';
+}
+div.p-region:after {
+  content: '\00a0';
+}
+div.p-tel:after {
+  content: 'Tel';
+  vertical-align: bottom;
+  margin-left: .5em;
+  width: 2em;
+  font-weight: bold;
+  font-size: .5em;
+  text-transform: uppercase;
+}
+div.p-tel-fax:after {
+  content: 'Fax';
+  vertical-align: middle;
+  margin-left: .5em;
+  width: 2em;
+  font-weight: bold;
+  font-size: .5em;
+  text-transform: uppercase;
+}
+span.p-role:before {
+  content: '\0008, ';
+}
+.p-name {
+  font-weight: 600;
+}
+.p-job-title {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+a.u-url {
+  text-decoration: none;
+}
+sup.p-note {
+  font-size: .7em !important;
+  font-weight: bold !important;
+}
+div.card-group h4 {
+  padding-top: 1em !important;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  clear: both;
+}
+div.card-group {
+  width: 700px;
+}

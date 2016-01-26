@@ -2,15 +2,15 @@
 div.h-card {
   line-height: 1.2em;
   display: inline-block;
-  border-radius: .1em;
+  border-radius: .2em;
   border: .05em solid #59564F !important;
   box-shadow: .05em .05em .05em .05em #ccc;
   float: left;
   font-size: .95em;
   margin: .5em;
   height: 10em;
-  padding: .8em .4em .8em .8em;
-  width: 28%;
+  padding: .5em 0 .5em .5em;
+  width: 30%;
 }
 div.p-locality,
 div.p-region {
@@ -40,8 +40,11 @@ div.p-tel-fax:after {
   font-size: .5em;
   text-transform: uppercase;
 }
-span.p-role:before {
+/*span.p-role:before {
   content: '\0008, ';
+}*/
+div.p-role {
+  font-style: italic;
 }
 .p-name {
   font-weight: 600;
@@ -57,13 +60,14 @@ sup.p-note {
   font-size: .7em !important;
   font-weight: bold !important;
 }
-div.card-group h4 {
+div.section h4 {
   padding-top: 1em !important;
   font-size: 1.5em;
   font-weight: bold;
   text-align: center;
   clear: both;
 }
-div.card-group {
+div.section {
   width: 700px;
-}
+  display:block;
+} 

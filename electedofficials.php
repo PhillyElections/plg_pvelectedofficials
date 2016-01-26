@@ -66,7 +66,7 @@ class plgContentElectedofficials extends JPlugin
     public function onAfterDispatch()
     {
         $document = &JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'plugins/content/style.css', 'text/css', null, array());
+        $document->addStyleSheet(JURI::base() . 'plugins/content/electedofficials.style.css', 'text/css', null, array());
     }
 
     /**
@@ -334,19 +334,29 @@ class plgContentElectedofficials extends JPlugin
     {
         $return = '';
         foreach ($results as $label => $group) {
-            $return .= '<div class="card-group">';
-            $return .= '<h3>' . $label . '</h3>';
+            $return .= '<div class="section">';
+            $return .= '<h4>' . $label . '</h4>';
 
             foreach ($group as $items) {
                 foreach ($items as $item) {
                     $fullname = $item['first_name'] . ' ' . ($item['middle_name'] ? $item['middle_name'] . ' ' : '') . $item['last_name'] . ($item['middle_name'] ? ' ' . $item['middle_name'] : '');
+                    $district = trim($item['congressional_district']) . trim($item['state_senate_district']) . trim($item['state_representative_district']) . trim($item['council_district']);
                     $return .= '	<div class="h-card">';
+
+                    if (in_array($label, array('City Officials', 'State Officials'))) {
+                        $return .= '        <div class="p-job-title">' . $item['office'] . '</div>';
+                    }
                     if ($item['website']) {
                         $return .= '		<a class="p-name u-url" ' . ($item['url'] ? 'href="' . $item['url'] . '"' : '') . ' target="_blank">' . $fullname . '</a> <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
                     } else {
                         $return .= '		' . $fullname . ' <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
                     }
-                    $return .= '		<div class="p-location">District 4</div>';
+                    if ($item['leadership_role']) {
+                        $return .= '<div class="p-role">' . $item['leadership_role'] . '</div>';
+                    }
+                    if ($district) {
+                        $return .= '        <div class="p-location">District ' . $district . '</div>';
+                    }
                     $return .= '		<div class="p-adr h-adr">';
                     $return .= '			<div class="p-street-address">' . $item['main_contact_address_1'] . '</div>';
                     if ($item['main_contact_address_2']) {

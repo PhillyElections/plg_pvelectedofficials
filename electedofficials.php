@@ -210,7 +210,7 @@ $value = $temp[1];
                 $text = JString::str_ireplace($regs[0][0], $content, $text);
             }
         }
-        dd("Back in getElectedofficialsStrings");
+
         return true;
     }
 
@@ -218,43 +218,42 @@ $value = $temp[1];
      * Get officials data,
      * return officials display.
      *
-     * @param   string   $field  db column
-     * @param   string   $value  db value
      * @return  method
      */
     public function getOfficials()
     {
         $db = &JFactory::getDBO();
 
-        $query = 'SELECT DISTINCT `office_level` FROM `#__electedofficials` WHERE `published`= 1';
+        $q = 'SELECT DISTINCT `office_level` FROM `#__electedofficials` WHERE `published`= 1';
 
         // initialize all our display data segments
-        $sections = array('City Officials', 'City Commissioners', 'City Council Members', 'State Officials', 'State Representatives', 'State Senators', 'United States President', 'United States Senators', 'United States Representatives');
-        foreach ($sections as $section) {
-            $results[$section] = array();
+        $segments = array('City Officials', 'City Commissioners', 'City Council Members', 'State Officials', 'State Representatives', 'State Senators', 'United States President', 'United States Senators', 'United States Representatives');
+        foreach ($segments as $segment) {
+            $results[$segment] = array();
         }
 
-        $db->setQuery($query);
+        $db->setQuery($q);
         $levels = $db->loadObjectList();
-        //foreach (array('local_executive', ))
+
         foreach ($levels as $level) {
-            $results[$level->office_level] = array();
-            $query = 'SELECT DISTINCT `office` FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `published`= 1';
-            $db->setQuery($query);
+            $q = 'SELECT DISTINCT `office` FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `published`= 1';
+            $db->setQuery($q);
             $offices = $db->loadObjectList();
             foreach ($offices as $office) {
-                $query = 'SELECT * FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `office`="' . $office->office . '" ORDER BY `leadership_role` DESC, `leadership_role` DESC, `leadership_role` DESC, `congressional_district` ASC, `state_senate_district` ASC, `state_representative_district` ASC, `council_district` ASC';
+                $q = 'SELECT * FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `office`="' . $office->office . '" ORDER BY (CASE WHEN `leadership_role` IS NULL THEN "ZZZ" ELSE `leadership_role` END) ASC, CAST(`congressional_district` AS UNSIGNED) ASC, CAST(`state_senate_district` AS UNSIGNED) ASC, CAST(`state_representative_district` AS UNSIGNED) ASC, CAST(`council_district` AS UNSIGNED) ASC';
 
-                $db->setQuery($query);
-                $this->placeResult($results, $db->loadAssocList(), $level, $office);
+                $db->setQuery($q);
+                $data = $db->loadAssocList();
+                $this->placeResult($results, $data, $level->office_level, $office->office);
             }
         }
-        dd($results);
+
         return $this->getContent($results);
     }
 
     /**
      * placeResult slots a record into a display-friendly position in the results array
+     *
      * @param  array  &$results [description]
      * @param  array  $array    group of related, pre-sorted results
      * @param  string $level    group value for office_level
@@ -266,14 +265,14 @@ $value = $temp[1];
         switch ($level) {
             case 'federal':
                 switch ($office) {
-                    case 'President of the United States':
-                        $segment = 'United States President';
-                        break;
                     case 'U.S. Senate':
                         $segment = 'United States Senators';
                         break;
                     case 'U.S. Representative':
                         $segment = 'United States Representatives';
+                        break;
+                    default:
+                        $segment = 'United States President';
                         break;
                 }
                 break;
@@ -292,11 +291,11 @@ $value = $temp[1];
                 break;
             case 'local':
                 switch ($office) {
-                    case 'City Commissioners':
-                        $segment = 'State Representatives';
+                    case 'City Commissioner':
+                        $segment = 'City Commissioners';
                         break;
                     case 'City Council':
-                    case 'City Council-At-Large':
+                    case 'City Council At-Large':
                         $segment = 'City Council Members';
                         break;
                     default:
@@ -305,7 +304,19 @@ $value = $temp[1];
                 }
                 break;
         }
-        array_push($results[$segment], $array);
+
+        if (count($results[$segment]) === 1 && count($array) === 1) {
+            // additional single element
+            array_push($results[$segment][0], $array[0]);
+        } else if (count($results[$segment]) === 1 && count($array) > 1) {
+            foreach ($array as $arr) {
+                // additional group of elements
+                array_push($results[$segment][0], $arr);
+            }
+        } else {
+            // first (or solo) chunk
+            array_push($results[$segment], $array);
+        }
     }
 
     /**
@@ -317,28 +328,137 @@ $value = $temp[1];
      */
     public function getContent(&$results)
     {
-        $return = "<h3>City Officials</h3>";
+        $return = '';
+        foreach ($results as $label => $group) {
+            $return .= '<div class="card-group">';
+            $return .= '<h3>' . $label . '</h3>';
 
-        $executive = array();
-        foreach ($results['local'] as $result) {
-            if (count($result) === 1) {
-                //        $executive
+            foreach ($group as $items) {
+                foreach ($items as $item) {
+                    $fullname = $item['first_name'] . ' ' . ($item['middle_name'] ? $item['middle_name'] . ' ' : '') . $item['last_name'] . ($item['middle_name'] ? ' ' . $item['middle_name'] : '');
+                    $return .= '	<div class="h-card">';
+                    if ($item['website']) {
+                        $return .= '		<a class="p-name u-url" ' . ($item['url'] ? 'href="' . $item['url'] . '"' : '') . ' target="_blank">' . $fullname . '</a> <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
+                    } else {
+                        $return .= '		' . $fullname . ' <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
+                    }
+                    $return .= '		<div class="p-location">District 4</div>';
+                    $return .= '		<div class="p-adr h-adr">';
+                    $return .= '			<div class="p-street-address">' . $item['main_contact_address_1'] . '</div>';
+                    if ($item['main_contact_address_2']) {
+                        $return .= '			<div class="p-street-address">' . $item['main_contact_address_2'] . '</div>';
+                    }
+                    $return .= '			<div class="p-locality">' . $item['main_contact_city'] . '</div>';
+                    $return .= '			<div class="p-region">' . $item['main_contact_state'] . '</div>';
+                    $return .= '			<div class="p-postal-code">' . $item['main_contact_zip'] . '</div>';
+                    $return .= '		</div>';
+                    if ($item['main_contact_phone']) {
+                        $return .= '		<div class="p-tel">' . $item['main_contact_phone'] . '</div>';
+                    }
+                    if ($item['main_contact_fax']) {
+                        $return .= '		<div class="p-tel-fax">' . $item['main_contact_fax'] . '</div>';
+                    }
+
+                    $return .= '	</div>';
+                }
             }
+            $return .= '</div>';
         }
-        $return .= "<h3>PA Officials</h3>";
+/*
 
-        foreach ($results['state'] as $result) {
-        }
-        $return .= "<h3>US Officials</h3>";
-        foreach ($results['federal'] as $result) {
+'id' => string (2) "72"
 
-            $sid = $result->sid;
-            if (JString::strpos($result->sid, '%') !== false && JString::strpos($result->sid, '^') !== false) {
-                $temp = explode('%', $result->sid);
-                $sid = JString::trim(JString::str_ireplace('^', ' ', $temp[1]));
-            }
-            $return .= '<li><a href="/ballot_paper/' . $result->file_id . '.pdf" target="_blank">District ' . $sid . '</a></li>';
-        }
-        return "<h4>Download Sample Ballots</h4><ul>" . $return . "</ul>";
+'office_level' => string (7) "federal"
+
+'leadership_role' => NULL
+
+'office' => string (30) "President of the United States"
+
+'congressional_district' => NULL
+
+'state_senate_district' => NULL
+
+'state_representative_district' => NULL
+
+'council_district' => NULL
+
+'first_name' => string (6) "Barack"
+
+'middle_name' => NULL
+
+'last_name' => string (5) "Obama"
+
+'suffix' => NULL
+
+'party' => string (1) "D"
+
+'first_elected' => string (4) "2008"
+
+'next_election' => string (4) "2016"
+
+'website' => string (18) "www.whitehouse.gov"
+
+'email' => NULL
+
+'main_contact_address_1' => string (21) "1600 Pennsylvania Ave"
+
+'main_contact_address_2' => NULL
+
+'main_contact_city' => string (10) "Washington"
+
+'main_contact_state' => string (2) "D."
+
+'main_contact_zip' => string (5) "20500"
+
+'main_contact_phone' => string (12) "202-456-1111"
+
+'main_contact_fax' => string (12) "202-456-2461"
+
+'local_contact_1_address_1' => string (0) ""
+
+'local_contact_1_address_2' => NULL
+
+'local_contact_1_city' => string (0) ""
+
+'local_contact_1_state' => string (0) ""
+
+'local_contact_1_zip' => string (0) ""
+
+'local_contact_1_phone' => NULL
+
+'local_contact_1_fax' => NULL
+
+'local_contact_2_address_1' => string (0) ""
+
+'local_contact_2_address_2' => NULL
+
+'local_contact_2_city' => string (0) ""
+
+'local_contact_2_state' => string (0) ""
+
+'local_contact_2_zip' => string (0) ""
+
+'local_contact_2_phone' => NULL
+
+'local_contact_2_fax' => NULL
+
+'local_contact_3_address_1' => string (0) ""
+
+'local_contact_3_address_2' => NULL
+
+'local_contact_3_city' => string (0) ""
+
+'local_contact_3_state' => string (0) ""
+
+'local_contact_3_zip' => string (0) ""
+
+'local_contact_3_phone' => NULL
+
+'local_contact_3_fax' => NULL
+
+'published' => string (1) "1"
+ */
+
+        return $return;
     }
 }

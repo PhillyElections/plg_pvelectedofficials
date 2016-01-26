@@ -341,7 +341,7 @@ class plgContentElectedofficials extends JPlugin
 
             foreach ($group as $items) {
                 foreach ($items as $item) {
-                    $fullname = $item['first_name'] . ' ' . ($item['middle_name'] ? $item['middle_name'] . ' ' : '') . $item['last_name'] . ($item['middle_name'] ? ' ' . $item['middle_name'] : '');
+                    $fullname = $item['first_name'] . ' ' . ($item['middle_name'] ? $item['middle_name'] . ' ' : '') . $item['last_name'] . ($item['suffix'] ? ' ' . $item['suffix'] : '');
                     $district = trim($item['congressional_district']) . trim($item['state_senate_district']) . trim($item['state_representative_district']) . trim($item['council_district']);
                     $return .= '	<div class="h-card">';
 

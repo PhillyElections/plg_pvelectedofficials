@@ -226,35 +226,68 @@ $value = $temp[1];
     {
         $db = &JFactory::getDBO();
 
-        $query = 'SELECT distinct `office_level` from `#__electedofficials`';
-/*
-local, not commissioners and not council
-City Officials
-local, commissioners
-City Commissioners
-local, council
-City Council Members
-state, not reprepresentative, not senate
-State Officials
-state, representative
-State Representatives
-state, senators
-State Senators
-federal, senators
-United States Senators
-federal, representatives
-United States Representatives
- */
+        $query = 'SELECT DISTINCT `office_level` FROM `#__electedofficials` WHERE `published`= 1';
+
+        // initialize all our display data segments
+        $sections = array('City Officials', 'City Commissioners', 'City Council Members', 'State Officials', 'State Representatives', 'State Senators', 'United States President', 'United States Senators', 'United States Representatives');
+        foreach ($sections as $section) {
+            $results[$section] = array();
+        }
+/*local, not commissioners and not council
+City Officials*/
+['local']['Mayor']
+['local']['District Attorney']
+['local']['City Controller']
+['local']['Register of Wills']
+['local']['Sheriff']
+
+/*local, commissioners
+City Commissioners*/
+['local']['City Commissioner']
+
+/*local, council
+City Council Members*/
+['local']['City Council']
+['local']['City Council At-Large']
+
+/*state, not reprepresentative, not senate
+State Officials*/
+['state']['Governor']
+['state']['Lieutenant Governor']
+['state']['Attorney General']
+['state']['State Treasurer']
+['state']['Auditor General']
+
+/*state, representative
+State Representatives*/
+['state']['State Representative']
+
+/*state, senators
+State Senators*/
+['state']['State Senator']
+
+/*federal, senators
+United States President*/
+['federal']['President of the United States']
+
+/*federal, senators
+United States Senators*/
+['federal']['U.S. Senate']
+
+/*federal, representatives
+United States Representatives*/
+['federal']['U.S. Representative']
+
         $db->setQuery($query);
         $levels = $db->loadObjectList();
         //foreach (array('local_executive', ))
         foreach ($levels as $level) {
             $results[$level->office_level] = array();
-            $query = 'SELECT distinct `office` from `#__electedofficials` where `office_level`="' . $level->office_level . '"';
+            $query = 'SELECT DISTINCT `office` FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `published`= 1';
             $db->setQuery($query);
             $offices = $db->loadObjectList();
             foreach ($offices as $office) {
-                $query = 'SELECT * from `#__electedofficials` where `office_level`="' . $level->office_level . '" and `office`="' . $office->office . '" ';
+                $query = 'SELECT * FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `office`="' . $office->office . '" ORDER BY `leadership_role` DESC, `leadership_role` DESC, `leadership_role` DESC, `congressional_district` ASC, `state_senate_district` ASC, `state_representative_district` ASC, `council_district` ASC';
 
                 $db->setQuery($query);
                 array_push($results[$level->office_level], array($office->office => $db->loadAssocList()));

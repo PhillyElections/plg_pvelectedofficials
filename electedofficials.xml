@@ -11,5 +11,6 @@
 <description>Dumps a grouped display of current office holders Usage: [[ElectedOfficials]].</description>
     <files>
         <filename plugin="electedofficials">electedofficials.php</filename>
+        <filename plugin="electedofficials">style.css</filename>
     </files>
 </install>

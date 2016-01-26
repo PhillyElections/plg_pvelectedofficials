@@ -231,7 +231,8 @@ class plgContentElectedofficials extends JPlugin
         $q = 'SELECT DISTINCT `office_level` FROM `#__electedofficials` WHERE `published`= 1';
 
         // initialize all our display data segments
-        $segments = array('City Officials', 'City Commissioners', 'City Council Members', 'State Officials', 'State Representatives', 'State Senators', 'United States President', 'United States Senators', 'United States Representatives');
+        //$segments = array('City Officials', 'City Commissioners', 'City Council Members', 'State Officials', 'State Representatives', 'State Senators', 'United States President', 'United States Senators', 'United States Representatives');
+        $segments = array('City Officials', 'City Commissioners', 'City Council Members', 'State Officials', 'State Representatives', 'State Senators', 'United States Senators', 'United States Representatives');
         foreach ($segments as $segment) {
             $results[$segment] = array();
         }
@@ -334,6 +335,7 @@ class plgContentElectedofficials extends JPlugin
     {
         $return = '';
         foreach ($results as $label => $group) {
+
             $return .= '<div class="section">';
             $return .= '<h4>' . $label . '</h4>';
 

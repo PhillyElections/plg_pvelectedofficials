@@ -347,7 +347,7 @@ class plgContentElectedofficials extends JPlugin
                         $return .= '        <div class="p-job-title">' . $item['office'] . '</div>';
                     }
                     if ($item['website']) {
-                        $return .= '		<a class="p-name u-url" ' . ($item['url'] ? 'href="http://' . $item['url'] . '"' : '') . ' target="_blank">' . $fullname . '</a> <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
+                        $return .= '		<a class="p-name u-url" href="http://' . $item['website'] . ' target="_blank">' . $fullname . '</a> <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
                     } else {
                         $return .= '		' . $fullname . ' <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
                     }

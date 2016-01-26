@@ -233,50 +233,6 @@ $value = $temp[1];
         foreach ($sections as $section) {
             $results[$section] = array();
         }
-/*local, not commissioners and not council
-City Officials*/
-//['local']['Mayor']
-        //['local']['District Attorney']
-        //['local']['City Controller']
-        //['local']['Register of Wills']
-        //['local']['Sheriff']
-
-/*local, commissioners
-City Commissioners*/
-//['local']['City Commissioner']
-
-/*local, council
-City Council Members*/
-//['local']['City Council']
-        //['local']['City Council At-Large']
-
-/*state, not reprepresentative, not senate
-State Officials*/
-//['state']['Governor']
-        //['state']['Lieutenant Governor']
-        //['state']['Attorney General']
-        //['state']['State Treasurer']
-        //['state']['Auditor General']
-
-/*state, representative
-State Representatives*/
-//['state']['State Representative']
-
-/*state, senators
-State Senators*/
-//['state']['State Senator']
-
-/*federal, senators
-United States President*/
-//['federal']['President of the United States']
-
-/*federal, senators
-United States Senators*/
-//['federal']['U.S. Senate']
-
-/*federal, representatives
-United States Representatives*/
-//['federal']['U.S. Representative']
 
         $db->setQuery($query);
         $levels = $db->loadObjectList();
@@ -290,11 +246,65 @@ United States Representatives*/
                 $query = 'SELECT * FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `office`="' . $office->office . '" ORDER BY `leadership_role` DESC, `leadership_role` DESC, `leadership_role` DESC, `congressional_district` ASC, `state_senate_district` ASC, `state_representative_district` ASC, `council_district` ASC';
 
                 $db->setQuery($query);
-                array_push($results[$level->office_level], array($office->office => $db->loadAssocList()));
+                $this->placeResult($results, $db->loadAssocList(), $level, $office);
             }
         }
         dd($results);
         return $this->getContent($results);
+    }
+
+    /**
+     * placeResult slots a record into a display-friendly position in the results array
+     * @param  array  &$results [description]
+     * @param  array  $array    group of related, pre-sorted results
+     * @param  string $level    group value for office_level
+     * @param  string $office   group label for office
+     * @return void
+     */
+    public function placeResult(&$results, $array, $level, $office)
+    {
+        switch ($level) {
+            case 'federal':
+                switch ($office) {
+                    case 'President of the United States':
+                        $segment = 'United States President';
+                        break;
+                    case 'U.S. Senate':
+                        $segment = 'United States Senators';
+                        break;
+                    case 'U.S. Representative':
+                        $segment = 'United States Representatives';
+                        break;
+                }
+                break;
+            case 'state':
+                switch ($office) {
+                    case 'State Representative':
+                        $segment = 'State Representatives';
+                        break;
+                    case 'State Senator':
+                        $segment = 'State Senators';
+                        break;
+                    default:
+                        $segment = 'State Officials';
+                        break;
+                }
+                break;
+            case 'local':
+                switch ($office) {
+                    case 'City Commissioners':
+                        $segment = 'State Representatives';
+                        break;
+                    case 'City Council':
+                    case 'City Council-At-Large':
+                        $segment = 'City Council Members';
+                        break;
+                    default:
+                        $segment = 'City Officials';
+                        break;
+                }
+                break;
+        }
     }
 
     /**

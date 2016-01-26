@@ -235,48 +235,48 @@ $value = $temp[1];
         }
 /*local, not commissioners and not council
 City Officials*/
-['local']['Mayor']
-['local']['District Attorney']
-['local']['City Controller']
-['local']['Register of Wills']
-['local']['Sheriff']
+//['local']['Mayor']
+        //['local']['District Attorney']
+        //['local']['City Controller']
+        //['local']['Register of Wills']
+        //['local']['Sheriff']
 
 /*local, commissioners
 City Commissioners*/
-['local']['City Commissioner']
+//['local']['City Commissioner']
 
 /*local, council
 City Council Members*/
-['local']['City Council']
-['local']['City Council At-Large']
+//['local']['City Council']
+        //['local']['City Council At-Large']
 
 /*state, not reprepresentative, not senate
 State Officials*/
-['state']['Governor']
-['state']['Lieutenant Governor']
-['state']['Attorney General']
-['state']['State Treasurer']
-['state']['Auditor General']
+//['state']['Governor']
+        //['state']['Lieutenant Governor']
+        //['state']['Attorney General']
+        //['state']['State Treasurer']
+        //['state']['Auditor General']
 
 /*state, representative
 State Representatives*/
-['state']['State Representative']
+//['state']['State Representative']
 
 /*state, senators
 State Senators*/
-['state']['State Senator']
+//['state']['State Senator']
 
 /*federal, senators
 United States President*/
-['federal']['President of the United States']
+//['federal']['President of the United States']
 
 /*federal, senators
 United States Senators*/
-['federal']['U.S. Senate']
+//['federal']['U.S. Senate']
 
 /*federal, representatives
 United States Representatives*/
-['federal']['U.S. Representative']
+//['federal']['U.S. Representative']
 
         $db->setQuery($query);
         $levels = $db->loadObjectList();

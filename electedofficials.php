@@ -52,10 +52,21 @@ class plgContentElectedofficials extends JPlugin
     public function onPrepareContent(&$article, &$params, $limitstart)
     {
         global $mainframe;
+
         if (is_object($article)) {
             return $this->prepOfficialsDisplay($article->text);
         }
         return $this->prepOfficialsDisplay($article);
+    }
+
+    /**
+     * use onAfterDispatch to wire in the stylesheet
+     * @return void
+     */
+    public function onAfterDispatch()
+    {
+        $document = &JFactory::getDocument();
+        $document->addStyleSheet(JURI::base() . 'plugins/content/style.css', 'text/css', null, array());
     }
 
     /**
@@ -198,13 +209,6 @@ class plgContentElectedofficials extends JPlugin
         $search = "(\[\[Electedofficials\]\])";
 
         while (preg_match($search, $text, $regs, PREG_OFFSET_CAPTURE)) {
-
-/*            $temp = explode('=', trim(trim($regs[0][0], '[]'), '[]'));
-if (sizeof($temp) === 2) {
-$temp2 = explode(':', $temp[0]);
-$field = $temp2[1];
-$value = $temp[1];
-}*/
 
             if ($content = $this->getOfficials()) {
                 $text = JString::str_ireplace($regs[0][0], $content, $text);

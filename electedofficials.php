@@ -341,7 +341,17 @@ class plgContentElectedofficials extends JPlugin {
 						// city overrides
 						$contact_phone2 = $item['local_contact_1_phone'];
 						$contact_fax    = $item['main_contact_fax']?$item['main_contact_fax']:$item['local_contact_1_fax'];
-					} elseif (strtolower($item['local_contact_1_city']) === 'philadelphia' && in_array($label, array('State Officials', 'State Representatives', 'State Senators', 'United States Senators', 'United States Representatives'))) {
+					} elseif (in_array($label, array('State Representatives', 'State Senators', 'United States Senators', 'United States Representatives'))) {
+						// out-of-city overrides
+						$contact_address_1 = $item['local_contact_1_address_1'];
+						$contact_address_2 = $item['local_contact_1_address_2'];
+						$contact_city      = $item['local_contact_1_city'];
+						$contact_state     = $item['local_contact_1_state'];
+						$contact_zip       = $item['local_contact_1_zip'];
+						$contact_phone     = $item['local_contact_1_phone'];
+						$contact_phone2    = $item['local_contact_2_phone'];
+						$contact_fax       = $item['local_contact_1_fax'];
+					} elseif (strtolower($item['local_contact_1_city']) === 'philadelphia' && in_array($label, array('State Officials'))) {
 						// out-of-city overrides
 						$contact_address_1 = $item['local_contact_1_address_1'];
 						$contact_address_2 = $item['local_contact_1_address_2'];

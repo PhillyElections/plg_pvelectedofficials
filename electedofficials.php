@@ -325,6 +325,33 @@ class plgContentElectedofficials extends JPlugin {
 
 			foreach ($group as $items) {
 				foreach ($items as $item) {
+					// defaults
+					$contact_address_1 = $item['main_contact_address_1'];
+					$contact_address_2 = $item['main_contact_address_2'];
+					$contact_city      = $item['main_contact_city'];
+					$contact_state     = $item['main_contact_state'];
+					$contact_zip       = $item['main_contact_zip'];
+					$contact_phone     = $item['main_contact_phone'];
+					$contact_phone2    = null;
+					$contact_fax       = $item['main_contact_fax'];
+
+					if (strtolower($item['first_name']) === 'vacant') {
+						//keep defaults
+					} elseif (in_array($label, array('State Officials', 'State Representatives', 'State Senators', 'United States Senators', 'United States Representatives'))) {
+						// out-of-city overrides
+						$contact_address_1 = $item['local_contact_1_address_1'];
+						$contact_address_2 = $item['local_contact_1_address_2'];
+						$contact_city      = $item['local_contact_1_city'];
+						$contact_state     = $item['local_contact_1_state'];
+						$contact_zip       = $item['local_contact_1_zip'];
+						$contact_phone     = $item['local_contact_1_phone'];
+						$contact_phone2    = $item['local_contact_2_phone'];
+						$contact_fax       = $item['local_contact_1_fax'];
+					} elseif (in_array($label, array('City Officials', 'City Commissioners', 'City Council Members'))) {
+						// city overrides
+						$contact_phone2 = $item['local_contact_1_phone'];
+						$contact_fax    = $item['main_contact_fax']?$item['main_contact_fax']:$item['local_contact_1_fax'];
+					}
 					$fullname = $item['first_name'].' '.($item['middle_name']?$item['middle_name'].' ':'').$item['last_name'].($item['suffix']?' '.$item['suffix']:'');
 					$district = trim($item['congressional_district']).trim($item['state_senate_district']).trim($item['state_representative_district']).trim($item['council_district']);
 					$return .= '	<div class="h-card">';
@@ -344,24 +371,22 @@ class plgContentElectedofficials extends JPlugin {
 						$return .= '        <div class="p-location">District '.$district.'</div>';
 					}
 					$return .= '		<div class="p-adr h-adr">';
-					$return .= '			<div class="p-street-address">'.$item['main_contact_address_1'].'</div>';
-					if ($item['main_contact_address_2']) {
-						$return .= '			<div class="p-street-address">'.$item['main_contact_address_2'].'</div>';
+					$return .= '			<div class="p-street-address">'.$contact_address_1.'</div>';
+					if ($contact_address_2) {
+						$return .= '			<div class="p-street-address">'.$contact_address_2.'</div>';
 					}
-					$return .= '			<div class="p-locality">'.$item['main_contact_city'].'</div>';
-					$return .= '			<div class="p-region">'.$item['main_contact_state'].'</div>';
-					$return .= '			<div class="p-postal-code">'.$item['main_contact_zip'].'</div>';
+					$return .= '			<div class="p-locality">'.$contact_city.'</div>';
+					$return .= '			<div class="p-region">'.$contact_state.'</div>';
+					$return .= '			<div class="p-postal-code">'.$contact_zip.'</div>';
 					$return .= '		</div>';
-					if ($item['main_contact_phone']) {
-						$return .= '		<div class="p-tel">'.$item['main_contact_phone'].'</div>';
+					if ($contact_phone) {
+						$return .= '		<div class="p-tel">'.$contact_phone.'</div>';
 					}
-					if (in_array($label, array('State Representatives', 'State Senators')) && $item['local_contact_1_phone']) {
-						$return .= '        <div class="p-tel">'.$item['local_contact_1_phone'].'</div>';
+					if ($contact_phone2) {
+						$return .= '        <div class="p-tel">'.$contact_phone2.'</div>';
 					}
-					if ($item['main_contact_fax']) {
-						$return .= '		<div class="p-tel-fax">'.$item['main_contact_fax'].'</div>';
-					} elseif ($item['local_contact_1_fax']) {
-						$return .= '        <div class="p-tel-fax">'.$item['local_contact_1_fax'].'</div>';
+					if ($contact_fax) {
+						$return .= '        <div class="p-tel-fax">'.$contact_fax.'</div>';
 					}
 					$return .= '	</div>';
 				}

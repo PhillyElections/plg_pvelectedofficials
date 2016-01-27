@@ -337,6 +337,10 @@ class plgContentElectedofficials extends JPlugin {
 
 					if (strtolower($item['first_name']) === 'vacant') {
 						//keep defaults
+					} elseif (strtolower($item['main_contact_city']) === 'philadelphia') {
+						// city overrides
+						$contact_phone2 = $item['local_contact_1_phone'];
+						$contact_fax    = $item['main_contact_fax']?$item['main_contact_fax']:$item['local_contact_1_fax'];
 					} elseif (in_array($label, array('State Officials', 'State Representatives', 'State Senators', 'United States Senators', 'United States Representatives'))) {
 						// out-of-city overrides
 						$contact_address_1 = $item['local_contact_1_address_1'];
@@ -347,10 +351,6 @@ class plgContentElectedofficials extends JPlugin {
 						$contact_phone     = $item['local_contact_1_phone'];
 						$contact_phone2    = $item['local_contact_2_phone'];
 						$contact_fax       = $item['local_contact_1_fax'];
-					} elseif (in_array($label, array('City Officials', 'City Commissioners', 'City Council Members'))) {
-						// city overrides
-						$contact_phone2 = $item['local_contact_1_phone'];
-						$contact_fax    = $item['main_contact_fax']?$item['main_contact_fax']:$item['local_contact_1_fax'];
 					}
 					$fullname = $item['first_name'].' '.($item['middle_name']?$item['middle_name'].' ':'').$item['last_name'].($item['suffix']?' '.$item['suffix']:'');
 					$district = trim($item['congressional_district']).trim($item['state_senate_district']).trim($item['state_representative_district']).trim($item['council_district']);

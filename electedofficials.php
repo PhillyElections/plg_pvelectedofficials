@@ -244,7 +244,7 @@ class plgContentElectedofficials extends JPlugin
             $db->setQuery($q);
             $offices = $db->loadObjectList();
             foreach ($offices as $office) {
-                $q = 'SELECT * FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `office`="' . $office->office . '" ORDER BY (CASE WHEN `leadership_role` IS NULL THEN "ZZZ" ELSE `leadership_role` END) ASC, CAST(`congressional_district` AS UNSIGNED) ASC, CAST(`state_senate_district` AS UNSIGNED) ASC, CAST(`state_representative_district` AS UNSIGNED) ASC, CAST(`council_district` AS UNSIGNED) ASC';
+                $q = 'SELECT * FROM `#__electedofficials` WHERE `office_level`="' . $level->office_level . '" AND `office`="' . $office->office . '" AND `published`= 1 ORDER BY (CASE WHEN `leadership_role` IS NULL THEN "ZZZ" ELSE `leadership_role` END) ASC, CAST(`congressional_district` AS UNSIGNED) ASC, CAST(`state_senate_district` AS UNSIGNED) ASC, CAST(`state_representative_district` AS UNSIGNED) ASC, CAST(`council_district` AS UNSIGNED) ASC';
 
                 $db->setQuery($q);
                 $data = $db->loadAssocList();

@@ -366,7 +366,7 @@ class plgContentElectedofficials extends JPlugin
                         $contact_zip = $item['local_contact_1_zip'];
                         $contact_phone = $phones[1];
                         $contact_phone2 = $phones[0];
-                        $contact_fax = $faxes[0];
+                        $contact_fax = $faxes[1] ? $faxes[1] : $faxes[0];
                     } elseif (strtolower($item['local_contact_1_city']) === 'philadelphia' && in_array($label, array('State Officials'))) {
                         // out-of-city overrides
                         $contact_address_1 = $item['local_contact_1_address_1'];
@@ -376,7 +376,7 @@ class plgContentElectedofficials extends JPlugin
                         $contact_zip = $item['local_contact_1_zip'];
                         $contact_phone = $phones[1];
                         $contact_phone2 = $phones[0];
-                        $contact_fax = $faxes[0];
+                        $contact_fax = $faxes[1] ? $faxes[1] : $faxes[0];
                     }
                     $fullname = $item['first_name'] . ' ' . ($item['middle_name'] ? $item['middle_name'] . ' ' : '') . $item['last_name'] . ($item['suffix'] ? ' ' . $item['suffix'] : '');
                     $district = trim($item['congressional_district']) . trim($item['state_senate_district']) . trim($item['state_representative_district']) . trim($item['council_district']);

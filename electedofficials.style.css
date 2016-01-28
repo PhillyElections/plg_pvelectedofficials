@@ -45,7 +45,8 @@ div.p-tel-fax:after {
 }*/
 span.p-role {
   font-style: italic;
-  font-size: .8em;
+  font-size: .75em;
+  vertical-align: text-top;
 }
 .p-name {
   font-weight: 600;

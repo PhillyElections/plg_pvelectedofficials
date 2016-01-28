@@ -44,7 +44,6 @@ div.p-tel-fax:after {
   content: '\0008, ';
 }*/
 span.p-role {
-  display: inline;
   font-style: italic;
   font-size: .8em;
 }

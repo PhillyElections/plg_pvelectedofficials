@@ -391,7 +391,7 @@ class plgContentElectedofficials extends JPlugin
                         $return .= '		' . $fullname . ' <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
                     }
                     if ($item['leadership_role']) {
-                        $return .= '<span class="p-role">' . $item['leadership_role'] . '</span>';
+                        $return .= '&nbsp;<span class="p-role">(' . $item['leadership_role'] . ')</span>';
                     }
                     if ($district) {
                         $return .= '        <div class="p-location">District ' . $district . '</div>';

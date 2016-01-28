@@ -8,7 +8,7 @@ div.h-card {
   float: left;
   font-size: .95em;
   margin: .5em;
-  height: 10em;
+  height: 10.5em;
   padding: .5em 0 .5em .5em;
   width: 30%;
 }
@@ -45,6 +45,7 @@ div.p-tel-fax:after {
 }*/
 div.p-role {
   font-style: italic;
+  font-size: .8;
 }
 .p-name {
   font-weight: 600;

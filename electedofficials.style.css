@@ -43,7 +43,8 @@ div.p-tel-fax:after {
 /*span.p-role:before {
   content: '\0008, ';
 }*/
-.p-role {
+span.p-role {
+  display: inline;
   font-style: italic;
   font-size: .8em;
 }

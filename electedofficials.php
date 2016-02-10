@@ -258,7 +258,7 @@ class plgContentElectedofficials extends JPlugin
     /**
      * placeResult slots a record into a display-friendly position in the results array
      *
-     * @param  array  &$results [description]
+     * @param  array  &$results
      * @param  array  $array    group of related, pre-sorted results
      * @param  string $level    group value for office_level
      * @param  string $office   group label for office
@@ -324,8 +324,7 @@ class plgContentElectedofficials extends JPlugin
     }
 
     /**
-     * Get officials data,
-     * return officials display.
+     * Using officials data, return officials display.
      *
      * @param   array   $results  officials data
      * @return  string
@@ -335,63 +334,28 @@ class plgContentElectedofficials extends JPlugin
         $return = '';
         foreach ($results as $label => $group) {
             $return .= '<div class="section">';
-            $return .= '<h4>' . $label . '</h4>';
+            $return .= '<h4>' . JText::_($label) . '</h4>';
 
             foreach ($group as $items) {
                 foreach ($items as $item) {
                     // defaults
-                    $phones = array_filter(array($item['main_contact_phone'], $item['local_contact_1_phone'], $item['local_contact_2_phone'], $item['local_contact_3_phone']));
-                    $faxes = array_filter(array($item['main_contact_fax'], $item['local_contact_1_fax'], $item['local_contact_2_fax'], $item['local_contact_3_fax']));
-                    $contact_address_1 = $item['main_contact_address_1'];
-                    $contact_address_2 = $item['main_contact_address_2'];
-                    $contact_city = $item['main_contact_city'];
-                    $contact_state = $item['main_contact_state'];
-                    $contact_zip = $item['main_contact_zip'];
-                    $contact_phone = $phones[0];
-                    $contact_phone2 = null;
-                    $contact_fax = $faxes[0];
-
-                    if (strtolower($item['first_name']) === 'vacant') {
-                        //keep defaults
-                    } elseif (strtolower($item['main_contact_city']) === 'philadelphia') {
-                        // city overrides
-                        $contact_phone2 = $phones[1];
-                        $contact_fax = $faxes[0];
-                    } elseif (in_array($label, array('State Representatives', 'State Senators', 'United States Senators', 'United States Representatives'))) {
-                        // out-of-city overrides
-                        $contact_address_1 = $item['local_contact_1_address_1'];
-                        $contact_address_2 = $item['local_contact_1_address_2'];
-                        $contact_city = $item['local_contact_1_city'];
-                        $contact_state = $item['local_contact_1_state'];
-                        $contact_zip = $item['local_contact_1_zip'];
-                        $contact_phone = $phones[1];
-                        $contact_phone2 = $phones[0];
-                        $contact_fax = $faxes[1] ? $faxes[1] : $faxes[0];
-                    } elseif (strtolower($item['local_contact_1_city']) === 'philadelphia' && in_array($label, array('State Officials'))) {
-                        // out-of-city overrides
-                        $contact_address_1 = $item['local_contact_1_address_1'];
-                        $contact_address_2 = $item['local_contact_1_address_2'];
-                        $contact_city = $item['local_contact_1_city'];
-                        $contact_state = $item['local_contact_1_state'];
-                        $contact_zip = $item['local_contact_1_zip'];
-                        $contact_phone = $phones[1];
-                        $contact_phone2 = $phones[0];
-                        $contact_fax = $faxes[1] ? $faxes[1] : $faxes[0];
+                    foreach ($this->setupContent($item, $label) as $key => $value) {
+                        $$key = $value;
                     }
                     $fullname = $item['first_name'] . ' ' . ($item['middle_name'] ? $item['middle_name'] . ' ' : '') . $item['last_name'] . ($item['suffix'] ? ' ' . $item['suffix'] : '');
                     $district = trim($item['congressional_district']) . trim($item['state_senate_district']) . trim($item['state_representative_district']) . trim($item['council_district']);
                     $return .= '	<div class="h-card">';
 
                     if (in_array($label, array('City Officials', 'State Officials'))) {
-                        $return .= '        <div class="p-job-title">' . $item['office'] . '</div>';
+                        $return .= '        <div class="p-job-title">' . JText::_($item['office']) . '</div>';
                     }
                     if ($item['website']) {
-                        $return .= '		<a class="p-name u-url" href="http://' . $item['website'] . '" target="_blank">' . $fullname . '</a> <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
+                        $return .= '		<a class="p-name u-url" href="http://' . $item['website'] . '" target="_blank">' . $fullname . '</a> <sup class="p-note" title="' . JText::_((strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican')) . '">' . strtoupper($item['party']) . '</sup>';
                     } else {
-                        $return .= '		' . $fullname . ' <sup class="p-note" title="' . (strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican') . '">' . strtoupper($item['party']) . '</sup>';
+                        $return .= '		' . $fullname . ' <sup class="p-note" title="' . JText::_((strtoupper($item['party']) === 'D' ? 'Democratic' : 'Republican')) . '">' . strtoupper($item['party']) . '</sup>';
                     }
                     if ($item['leadership_role']) {
-                        $return .= '&nbsp;<span class="p-role">(' . $item['leadership_role'] . ')</span>';
+                        $return .= '&nbsp;<span class="p-role">(' . JText::_($item['leadership_role']) . ')</span>';
                     }
                     if ($district) {
                         $return .= '        <div class="p-location">' . JText::_('District') . ' ' . $district . '</div>';
@@ -425,8 +389,62 @@ class plgContentElectedofficials extends JPlugin
         return $return;
     }
 
-    public function getIniVarName($string)
+    /**
+     * setupContent -- there's a certain amount of juggling of values based on presence of absence of data
+     * This is just here to slim getContent a bit.
+     *
+     * @param    array    $item
+     * @param    string   $label
+     * @return   array
+     */
+    public function setupContent($item, $label)
     {
-        return JString::strtoupper(JString::str_replace(" ", "_", $string));
+        $phones = array_filter(array($item['main_contact_phone'], $item['local_contact_1_phone'], $item['local_contact_2_phone'], $item['local_contact_3_phone']));
+        $faxes = array_filter(array($item['main_contact_fax'], $item['local_contact_1_fax'], $item['local_contact_2_fax'], $item['local_contact_3_fax']));
+        $contact_address_1 = $item['main_contact_address_1'];
+        $contact_address_2 = $item['main_contact_address_2'];
+        $contact_city = $item['main_contact_city'];
+        $contact_state = $item['main_contact_state'];
+        $contact_zip = $item['main_contact_zip'];
+        $contact_phone = $phones[0];
+        $contact_phone2 = null;
+        $contact_fax = $faxes[0];
+
+        if (strtolower($item['first_name']) === 'vacant') {
+            //keep defaults
+        } elseif (strtolower($item['main_contact_city']) === 'philadelphia') {
+            // city overrides
+            $contact_phone2 = $phones[1];
+            $contact_fax = $faxes[0];
+        } elseif (in_array($label, array('State Representatives', 'State Senators', 'United States Senators', 'United States Representatives'))) {
+            // out-of-city overrides
+            $contact_address_1 = $item['local_contact_1_address_1'];
+            $contact_address_2 = $item['local_contact_1_address_2'];
+            $contact_city = $item['local_contact_1_city'];
+            $contact_state = $item['local_contact_1_state'];
+            $contact_zip = $item['local_contact_1_zip'];
+            $contact_phone = $phones[1];
+            $contact_phone2 = $phones[0];
+            $contact_fax = $faxes[1] ? $faxes[1] : $faxes[0];
+        } elseif (strtolower($item['local_contact_1_city']) === 'philadelphia' && in_array($label, array('State Officials'))) {
+            // out-of-city overrides
+            $contact_address_1 = $item['local_contact_1_address_1'];
+            $contact_address_2 = $item['local_contact_1_address_2'];
+            $contact_city = $item['local_contact_1_city'];
+            $contact_state = $item['local_contact_1_state'];
+            $contact_zip = $item['local_contact_1_zip'];
+            $contact_phone = $phones[1];
+            $contact_phone2 = $phones[0];
+            $contact_fax = $faxes[1] ? $faxes[1] : $faxes[0];
+        }
+        return array(
+            'contact_address_1' => $contact_address_1,
+            'contact_address_2' => $contact_address_2,
+            'contact_city' => $contact_city,
+            'contact_state' => $contact_state,
+            'contact_zip' => $contact_zip,
+            'contact_phone' => $contact_phone,
+            'contact_phone2' => $contact_phone2,
+            'contact_fax' => $contact_fax);
     }
 }

@@ -12,6 +12,8 @@
     <files>
         <filename plugin="electedofficials">electedofficials.php</filename>
         <filename>electedofficials.style.css</filename>
+        <filename>en-GB.electedofficials.ini</filename>
+        <filename>es-ES.electedofficials.ini</filename>
     </files>
     <languages>
         <language tag="en-GB">en-GB.electedofficials.ini</language>

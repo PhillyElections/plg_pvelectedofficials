@@ -12,7 +12,8 @@
 defined('_JEXEC') or die('Restricted access');
 //JPlugin::loadLanguage('plg_electedofficials');
 
-JFactory::getLanguage()->load('plg_electedofficials');
+$language = JFactory::getLanguage();
+$language->load('plg_electedofficials', JPATH_ADMINISTRATOR, null, null);
 
 jimport('joomla.plugin.plugin');
 jimport('kint.kint');

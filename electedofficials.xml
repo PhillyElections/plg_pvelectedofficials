@@ -15,7 +15,7 @@
         <folder>languages</folder>
     </files>
     <languages>
-        <language tag="en-GB">electedofficials.en.ini</language>
-        <language tag="es-ES">electedofficials.es.ini</language>
+        <language tag="en-GB">languages/electedofficials.en.ini</language>
+        <language tag="es-ES">languages/electedofficials.es.ini</language>
     </languages>
 </install>

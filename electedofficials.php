@@ -338,7 +338,7 @@ class plgContentElectedofficials extends JPlugin
 
             foreach ($group as $items) {
                 foreach ($items as $item) {
-                    // defaults
+                    // tweak data to display
                     foreach ($this->setupContent($item, $label) as $key => $value) {
                         $$key = $value;
                     }

@@ -12,11 +12,9 @@
     <files>
         <filename plugin="electedofficials">electedofficials.php</filename>
         <filename>electedofficials.style.css</filename>
-        <filename>en-GB.electedofficials.ini</filename>
-        <filename>es-ES.electedofficials.ini</filename>
     </files>
     <languages>
-        <language tag="en-GB">en-GB.electedofficials.ini</language>
-        <language tag="es-ES">es-ES.electedofficials.ini</language>
+        <language tag="en-GB">en-GB.plg_electedofficials.ini</language>
+        <language tag="es-ES">es-ES.plg_electedofficials.ini</language>
     </languages>
 </install>

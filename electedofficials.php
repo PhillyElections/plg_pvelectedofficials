@@ -10,7 +10,10 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-JPlugin::loadLanguage('plg_electedofficials');
+//JPlugin::loadLanguage('plg_electedofficials');
+
+JFactory::getLanguage()->load('plg_electedofficials');
+
 jimport('joomla.plugin.plugin');
 jimport('kint.kint');
 

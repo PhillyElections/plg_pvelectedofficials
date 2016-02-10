@@ -394,7 +394,7 @@ class plgContentElectedofficials extends JPlugin
                         $return .= '&nbsp;<span class="p-role">(' . $item['leadership_role'] . ')</span>';
                     }
                     if ($district) {
-                        $return .= '        <div class="p-location">District ' . $district . '</div>';
+                        $return .= '        <div class="p-location">'.JText::_('DISTRICT').' ' . $district . '</div>';
                     }
                     $return .= '		<div class="p-adr h-adr">';
                     $return .= '			<div class="p-street-address">' . $contact_address_1 . '</div>';
@@ -423,5 +423,9 @@ class plgContentElectedofficials extends JPlugin
             $return .= '</div>';
         }
         return $return;
+    }
+
+    public function getIniVarName($string){
+        return JString::strtoupper((JString::str_replace(" ", "_", $string));
     }
 }

@@ -23,7 +23,7 @@ jimport('joomla.plugin.plugin');
  * @subpackage  Content
  * @since       1.5
  */
-class plgContentPpvlectedofficials extends JPlugin
+class plgContentPvelectedofficials extends JPlugin
 {
 
     /**

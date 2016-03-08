@@ -68,7 +68,7 @@ class plgContentPvelectedofficials extends JPlugin
     public function onAfterDispatch()
     {
         $document = &JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'plugins/content/electedofficials.style.css', 'text/css', null, array());
+        $document->addStyleSheet(JURI::base() . 'plugins/content/pvelectedofficials.style.css', 'text/css', null, array());
     }
 
     /**

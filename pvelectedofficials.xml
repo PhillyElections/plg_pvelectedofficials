@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="content" method="upgrade">
-    <name>Content - Elected Officials</name>
+    <name>Content - PV Elected Officials</name>
     <author>Matt Murphy</author> 
     <creationDate>2015.09.20</creationDate>
     <copyright>Copyright (C) 2015 Philadelphia Elections Commission. All rights reserved.</copyright>
@@ -8,13 +8,13 @@
     <authorEmail>matthew.e.murphy@phila.gov</authorEmail> 
     <authorUrl>http://www.philadelphiavotes.com</authorUrl> 
     <version>0.1</version>
-<description>Dumps a grouped display of current office holders Usage: [[ElectedOfficials]].</description>
+<description>Dumps a grouped display of current office holders Usage: [[PVElectedOfficials]].</description>
     <files>
-        <filename plugin="electedofficials">electedofficials.php</filename>
-        <filename>electedofficials.style.css</filename>
+        <filename plugin="pvelectedofficials">pvelectedofficials.php</filename>
+        <filename>pvelectedofficials.style.css</filename>
     </files>
     <languages>
-        <language tag="en-GB">language/en-GB/en-GB.plg_electedofficials.ini</language>
-        <language tag="es-ES">language/es-ES/es-ES.plg_electedofficials.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_pvelectedofficials.ini</language>
+        <language tag="es-ES">language/es-ES/es-ES.plg_pvelectedofficials.ini</language>
     </languages>
 </install>

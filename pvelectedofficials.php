@@ -170,7 +170,7 @@ class plgContentPpvlectedofficials extends JPlugin
     {
 
         // Quick, cheap chance to back out.
-        if (JString::strpos($text, 'Electedofficials') === false) {
+        if (JString::strpos($text, 'PVElectedOfficials') === false) {
             return true;
         }
 
@@ -204,11 +204,11 @@ class plgContentPpvlectedofficials extends JPlugin
     {
         // Quick, cheap chance to back out.
 
-        if (JString::strpos($text, 'Electedofficials') === false) {
+        if (JString::strpos($text, 'PVElectedOfficials') === false) {
             return true;
         }
 
-        $search = "(\[\[Electedofficials\]\])";
+        $search = "(\[\[PVElectedOfficials\]\])";
 
         while (preg_match($search, $text, $regs, PREG_OFFSET_CAPTURE)) {
             if ($content = $this->getOfficials()) {

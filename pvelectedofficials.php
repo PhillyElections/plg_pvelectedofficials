@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: electedofficials.php
+ * @version     $Id: pvelectedofficials.php
  * @package     PVotes
  * @subpackage  Content
  * @copyright   Copyright (C) 2015 Philadelphia Elections Commission
@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 $language = JFactory::getLanguage();
-$language->load('plg_electedofficials', JPATH_ADMINISTRATOR, null, null);
+$language->load('plg_pvelectedofficials', JPATH_ADMINISTRATOR, null, null);
 
 jimport('joomla.plugin.plugin');
 
@@ -23,7 +23,7 @@ jimport('joomla.plugin.plugin');
  * @subpackage  Content
  * @since       1.5
  */
-class plgContentElectedofficials extends JPlugin
+class plgContentPpvlectedofficials extends JPlugin
 {
 
     /**
@@ -37,7 +37,7 @@ class plgContentElectedofficials extends JPlugin
      * @param object $params  The object that holds the plugin parameters
      * @since 1.5
      */
-    public function plgContentElectedofficials(&$subject, $params)
+    public function plgContentPvelectedofficials(&$subject, $params)
     {
         parent::__construct($subject, $params);
     }

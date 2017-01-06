@@ -418,7 +418,7 @@ class plgContentPvelectedofficials extends JPlugin
             // city overrides
             $contact_phone2 = $phones[1];
             $contact_fax = $faxes[0];
-        } elseif (in_array($label, array('State Representatives', 'State Senators', 'United States Senators', 'United States Representatives'))) {
+        } elseif ($item['local_contact_1_address_1'] && in_array($label, array('State Representatives', 'State Senators', 'United States Senators', 'United States Representatives'))) {
             // out-of-city overrides
             $contact_address_1 = $item['local_contact_1_address_1'];
             $contact_address_2 = $item['local_contact_1_address_2'];
@@ -438,6 +438,10 @@ class plgContentPvelectedofficials extends JPlugin
             $contact_phone = $phones[1];
             $contact_phone2 = $phones[0];
             $contact_fax = $faxes[1] ? $faxes[1] : $faxes[0];
+        }
+
+        if ($contact_address_1 = '') {
+
         }
         return array(
             'contact_address_1' => $contact_address_1,

@@ -440,9 +440,6 @@ class plgContentPvelectedofficials extends JPlugin
             $contact_fax = $faxes[1] ? $faxes[1] : $faxes[0];
         }
 
-        if ($contact_address_1 = '') {
-
-        }
         return array(
             'contact_address_1' => $contact_address_1,
             'contact_address_2' => $contact_address_2,
